@@ -7,7 +7,7 @@ The goal of this project is to build an AI system that can inspect solar panel i
 ---
 
 ## Built With
-
+ 
 - Python
 - PyTorch
 - Torchvision
