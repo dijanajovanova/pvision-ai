@@ -7,7 +7,7 @@ from PIL import Image
 from torchvision import models, transforms
 
 
-MODEL_PATH = Path("models/pvision_classifier.pth")
+MODEL_PATH = Path("models/pvision_classifier.pth") 
 CLASS_NAMES = ["Defective", "Healthy"]
 
 
