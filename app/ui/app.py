@@ -28,7 +28,7 @@ def load_model() -> torch.nn.Module:
 
 
 def predict(image: Image.Image) -> tuple[str, float]:
-    """Predict the condition of a solar panel image."""
+    """Predict whether a solar panel is healthy or defective."""
 
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
@@ -41,11 +41,12 @@ def predict(image: Image.Image) -> tuple[str, float]:
 
     with torch.no_grad():
         output = model(image)
+
         probabilities = torch.softmax(output, dim=1)
 
         confidence, prediction = torch.max(
             probabilities,
-            dim=1
+            dim=1,
         )
 
     return (
@@ -57,42 +58,81 @@ def predict(image: Image.Image) -> tuple[str, float]:
 st.set_page_config(
     page_title="PVision AI",
     page_icon="☀️",
-    layout="centered",
+    layout="wide",
 )
 
-st.title("PVision AI")
+st.title("☀️ PVision AI")
+st.caption("AI-powered photovoltaic panel inspection")
 
-st.write(
-    "Upload a solar panel image and let the model classify it as healthy or defective."
-)
+st.divider()
 
-uploaded_file = st.file_uploader(
-    "Select a JPG image",
-    type=["jpg"],
-)
+left_column, right_column = st.columns(2)
 
-if uploaded_file:
+with left_column:
 
-    image = Image.open(uploaded_file).convert("RGB")
+    st.subheader("Upload Image")
 
-    st.image(
-        image,
-        caption="Uploaded Image",
-        use_container_width=True,
+    uploaded_file = st.file_uploader(
+        "Select a JPG image",
+        type=["jpg"],
     )
 
-    if st.button("Analyze Image"):
+    if uploaded_file:
 
-        prediction, confidence = predict(image)
+        image = Image.open(uploaded_file).convert("RGB")
 
-        st.subheader("Prediction")
-
-        st.metric(
-            label="Panel Status",
-            value=prediction,
+        st.image(
+            image,
+            caption="Uploaded Image",
+            use_container_width=True,
         )
 
-        st.metric(
-            label="Confidence",
-            value=f"{confidence:.2%}",
-        )
+with right_column:
+
+    st.subheader("Inspection Result")
+
+    if uploaded_file:
+
+        if st.button("Analyze Image", use_container_width=True):
+
+            prediction, confidence = predict(image)
+
+            if prediction == "Healthy":
+                st.success("🟢 Panel Status: Healthy")
+            else:
+                st.error("🔴 Panel Status: Defective")
+
+            st.metric(
+                label="Confidence",
+                value=f"{confidence:.2%}",
+            )
+
+            st.progress(confidence)
+
+            st.subheader("Inspection Summary")
+
+            if prediction == "Healthy":
+
+                st.write(
+                    """
+                    No visible defects were detected.
+
+                    The panel appears to be in good condition and
+                    no immediate maintenance is recommended.
+                    """
+                )
+
+            else:
+
+                st.write(
+                    """
+                    A defect was detected with high confidence.
+
+                    A manual inspection is recommended to verify
+                    the damage before returning the panel to service.
+                    """
+                )
+
+    else:
+
+        st.info("Upload an image to start the inspection.")
