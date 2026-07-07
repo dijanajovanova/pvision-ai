@@ -164,4 +164,4 @@ with right_column:
         st.info(
             "Upload a solar panel image to begin the inspection."
         )
->>>>>>> cb842e5 (Refactor Streamlit application layout):app/ui/main.py
+>>>>>>> cb842e5 (Refactor Streamlit application layout):app/ui/main.py 
