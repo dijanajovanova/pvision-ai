@@ -3,8 +3,10 @@ from pathlib import Path
 import streamlit as st
 import torch
 import torch.nn as nn
+
 from PIL import Image
 from torchvision import models, transforms
+from app.reports.pdf_report import create_pdf_report
 
 
 MODEL_PATH = Path("models/pvision_classifier.pth") 
@@ -40,6 +42,7 @@ def predict(image: Image.Image) -> tuple[str, float]:
     model = load_model()
 
     with torch.no_grad():
+
         output = model(image)
 
         probabilities = torch.softmax(output, dim=1)
@@ -53,7 +56,6 @@ def predict(image: Image.Image) -> tuple[str, float]:
         CLASS_NAMES[prediction.item()],
         confidence.item(),
     )
-
 
 st.set_page_config(
     page_title="PVision AI",
@@ -93,18 +95,24 @@ with right_column:
 
     if uploaded_file:
 
-        if st.button("Analyze Image", use_container_width=True):
+        if st.button(
+            "Analyze Image",
+            use_container_width=True,
+        ):
 
             prediction, confidence = predict(image)
 
             if prediction == "Healthy":
+
                 st.success("🟢 Panel Status: Healthy")
+
             else:
+
                 st.error("🔴 Panel Status: Defective")
 
             st.metric(
-                label="Confidence",
-                value=f"{confidence:.2%}",
+                "Confidence",
+                f"{confidence:.2%}",
             )
 
             st.progress(confidence)
@@ -117,8 +125,8 @@ with right_column:
                     """
                     No visible defects were detected.
 
-                    The panel appears to be in good condition and
-                    no immediate maintenance is recommended.
+                    The panel appears to be operating normally.
+                    Continue routine inspections.
                     """
                 )
 
@@ -128,11 +136,32 @@ with right_column:
                     """
                     A defect was detected with high confidence.
 
-                    A manual inspection is recommended to verify
-                    the damage before returning the panel to service.
+                    A manual inspection is recommended before
+                    returning the panel to service.
                     """
+                )
+
+            report_path = create_pdf_report(
+                prediction,
+                confidence,
+            )
+
+            with open(report_path, "rb") as pdf_file:
+
+                st.download_button(
+                    label="📄 Download Inspection Report",
+                    data=pdf_file,
+                    file_name="PVision_AI_Report.pdf",
+                    mime="application/pdf",
+                    use_container_width=True,
                 )
 
     else:
 
+<<<<<<< HEAD:app/ui/app.py
         st.info("Upload an image to start the inspection.")
+=======
+        st.info(
+            "Upload a solar panel image to begin the inspection."
+        )
+>>>>>>> cb842e5 (Refactor Streamlit application layout):app/ui/main.py
