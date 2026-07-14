@@ -158,10 +158,4 @@ with right_column:
 
     else:
 
-<<<<<<< HEAD:app/ui/app.py
         st.info("Upload an image to start the inspection.")
-=======
-        st.info(
-            "Upload a solar panel image to begin the inspection."
-        )
->>>>>>> cb842e5 (Refactor Streamlit application layout):app/ui/main.py 

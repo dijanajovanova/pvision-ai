@@ -2,6 +2,7 @@ from datetime import datetime
 from pathlib import Path
 
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph, SimpleDocTemplate
 
 
 OUTPUT_FOLDER = Path("reports")
