@@ -2,8 +2,7 @@ from datetime import datetime
 from pathlib import Path
 
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import Paragraph, SimpleDocTemplate
-
+from reportlab.platypus import Image, Paragraph, SimpleDocTemplate
 
 OUTPUT_FOLDER = Path("reports")
 OUTPUT_FOLDER.mkdir(exist_ok=True)
@@ -12,6 +11,7 @@ OUTPUT_FOLDER.mkdir(exist_ok=True)
 def create_pdf_report(
     prediction: str,
     confidence: float,
+    image_path: str,
 ) -> Path:
     """Create an inspection report as a PDF."""
 
@@ -21,6 +21,14 @@ def create_pdf_report(
     styles = getSampleStyleSheet()
 
     content = []
+
+    if Path(image_path).exists():
+
+        image = Image(image_path)
+        image.drawWidth = 300
+        image.drawHeight = 200
+
+    content.append(image)
 
     content.append(Paragraph("<b>PVision AI</b>", styles["Title"]))
     content.append(

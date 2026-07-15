@@ -141,10 +141,15 @@ with right_column:
                     """
                 )
 
-            report_path = create_pdf_report(
-                prediction,
-                confidence,
-            )
+                image_path = "images/temp_upload.jpg"
+
+                image.save(image_path)
+
+                report_path = create_pdf_report(
+                    prediction,
+                    confidence,
+                    image_path,
+         )
 
             with open(report_path, "rb") as pdf_file:
 
