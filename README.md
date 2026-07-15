@@ -2,7 +2,7 @@
 
 PVision AI is a computer vision project that focuses on detecting defects in solar panels using deep learning.
 
-The goal of this project is to build an AI system that can inspect solar panel images, classify them as healthy or defective, and later identify the exact location of the defect. In future versions, I plan to integrate object detection, an LLM for automatic inspection reports, and a simple web interface.
+The goal of this project is to build an AI system that can inspect solar panel images, classify them as healthy or defective, and later identify the exact location of the defect. In future versions, I plan to integrate object detection, an LLM for automatic inspection reports, and a simple web interface. 
 
 ---
 
