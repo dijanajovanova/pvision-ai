@@ -2,7 +2,13 @@ from datetime import datetime
 from pathlib import Path
 
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import Image, Paragraph, SimpleDocTemplate
+from reportlab.platypus import (
+    Image,
+    Paragraph,
+    SimpleDocTemplate,
+    Spacer,
+    HRFlowable,
+)
 
 OUTPUT_FOLDER = Path("reports")
 OUTPUT_FOLDER.mkdir(exist_ok=True)
@@ -22,19 +28,36 @@ def create_pdf_report(
 
     content = []
 
-    if Path(image_path).exists():
+    # Title
+    content.append(
+        Paragraph("<b>PVision AI</b>", styles["Title"])
+    )
 
-        image = Image(image_path)
-        image.drawWidth = 300
-        image.drawHeight = 200
-
-    content.append(image)
-
-    content.append(Paragraph("<b>PVision AI</b>", styles["Title"]))
     content.append(
         Paragraph(
             "Solar Panel Inspection Report",
             styles["Heading2"],
+        )
+    )
+
+    content.append(Spacer(1, 8))
+
+    content.append(
+        HRFlowable(
+            width="100%",
+            thickness=1,
+            color="grey",
+    )
+)
+
+    content.append(Spacer(1, 12))
+    content.append(Spacer(1, 12))
+
+    # Inspection details
+    content.append(
+        Paragraph(
+            "<b>Inspection Details</b>",
+            styles["Heading3"],
         )
     )
 
@@ -59,12 +82,36 @@ def create_pdf_report(
         )
     )
 
+    content.append(Spacer(1, 12))
+
+    # Uploaded image
+    if Path(image_path).exists():
+
+        content.append(
+            Paragraph(
+                "<b>Uploaded Image</b>",
+                styles["Heading3"],
+            )
+        )
+
+        image = Image(image_path)
+        image.drawWidth = 300
+        image.drawHeight = 200
+
+        content.append(image)
+
+        content.append(Spacer(1, 12))
+
+    # Recommendation
     if prediction == "Healthy":
+
         recommendation = (
             "No visible defects were detected. "
             "Continue with routine inspections."
         )
+
     else:
+
         recommendation = (
             "A defect was detected. "
             "A manual inspection is recommended."
@@ -72,7 +119,14 @@ def create_pdf_report(
 
     content.append(
         Paragraph(
-            f"<b>Recommendation:</b> {recommendation}",
+            "<b>Recommendation</b>",
+            styles["Heading3"],
+        )
+    )
+
+    content.append(
+        Paragraph(
+            recommendation,
             styles["Normal"],
         )
     )
